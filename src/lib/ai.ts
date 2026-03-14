@@ -251,3 +251,42 @@ export async function generateVideo(firstFrameBase64: string, lastFrameBase64: s
   return URL.createObjectURL(videoBlob);
 }
 
+export async function searchCharacterBible(mangaName: string, chapter: string, modelName: string = 'gemini-3.1-pro-preview', language: string = 'français') {
+  const ai = getAI();
+  
+  const promptText = `Recherche sur internet des informations détaillées sur les personnages du manga "${mangaName}" (spécifiquement autour du chapitre ${chapter}). 
+  Extrais une 'Bible des Personnages' détaillée. Pour chaque personnage récurrent ou important, donne son nom, son rôle, et une description physique TRÈS DÉTAILLÉE incluant OBLIGATOIREMENT ses couleurs (cheveux, yeux, vêtements, accessoires). 
+  Extrais aussi le style graphique global de l'oeuvre. Rédige le tout en ${language}.`;
+
+  const response = await ai.models.generateContent({
+    model: modelName,
+    contents: [{ text: promptText }],
+    config: {
+      tools: [{ googleSearch: {} }],
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          globalStyle: { type: Type.STRING },
+          characters: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                name: { type: Type.STRING },
+                description: { type: Type.STRING },
+                colorPalette: { type: Type.STRING }
+              },
+              required: ["name", "description", "colorPalette"]
+            }
+          }
+        },
+        required: ["globalStyle", "characters"]
+      }
+    }
+  });
+  
+  if (!response.text) throw new Error("Échec de la recherche de la bible des personnages.");
+  return JSON.parse(response.text);
+}
+
