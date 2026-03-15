@@ -4,53 +4,158 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-bg-dark: #050505;
-  --color-panel: #111111;
-  --color-accent: #6366f1; /* Indigo */
-  --color-accent-hover: #4f46e5;
-  --color-text-main: #f3f4f6;
-  --color-text-muted: #9ca3af;
-  --color-border: rgba(255, 255, 255, 0.1);
+  --color-bg-dark: #020617; /* Deepest blue-black */
+  --color-panel: rgba(15, 23, 42, 0.8); /* Slate-900 with transparency */
+  --color-neon-cyan: #22d3ee; /* Cyan-400 */
+  --color-neon-blue: #3b82f6; /* Blue-500 */
+  --color-neon-emerald: #10b981; /* Emerald-500 */
+  --color-text-main: #f8fafc; /* Slate-50 */
+  --color-text-muted: #94a3b8; /* Slate-400 */
+  --color-border-neon: rgba(34, 211, 238, 0.3);
 }
 
 body {
   background-color: var(--color-bg-dark);
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 50%),
+    linear-gradient(rgba(34, 211, 238, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
   color: var(--color-text-main);
   font-family: var(--font-sans);
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 /* Custom scrollbar for a technical feel */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-bg-dark);
 }
 ::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
+  background: #1e293b;
+  border-radius: 10px;
+  border: 1px solid var(--color-border-neon);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--color-neon-cyan);
+  box-shadow: 0 0 10px var(--color-neon-cyan);
 }
 
 .glass-panel {
   background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border-neon);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(34, 211, 238, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: rgba(34, 211, 238, 0.6);
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.1), inset 0 0 15px rgba(34, 211, 238, 0.08);
+}
+
+.neon-text {
+  color: var(--color-neon-cyan);
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+}
+
+.neon-border {
+  border: 1px solid var(--color-neon-cyan);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.4), inset 0 0 5px rgba(34, 211, 238, 0.2);
+}
+
+.neon-button {
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid var(--color-neon-cyan);
+  color: var(--color-neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.neon-button:hover:not(:disabled) {
+  background: var(--color-neon-cyan);
+  color: #000;
+  box-shadow: 0 0 20px var(--color-neon-cyan);
+}
+
+.neon-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.neon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: #475569;
+  color: #475569;
 }
 
 .step-indicator {
   transition: all 0.3s ease;
 }
 .step-indicator.active {
-  color: var(--color-accent);
-  text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+  color: var(--color-neon-cyan);
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.8);
 }
 .step-indicator.done {
-  color: #10b981; /* Emerald */
+  color: var(--color-neon-emerald);
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.scanline-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(34, 211, 238, 0.2);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.5);
+  animation: scanline 4s linear infinite;
+  pointer-events: none;
+}
+
+.progress-bar-container {
+  height: 12px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-neon-blue), var(--color-neon-cyan));
+  box-shadow: 0 0 15px var(--color-neon-cyan);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.energy-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(1px);
 }

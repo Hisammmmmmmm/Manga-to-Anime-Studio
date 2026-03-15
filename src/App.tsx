@@ -1498,22 +1498,22 @@ export default function App() {
     <div className="min-h-screen p-6 flex flex-col max-w-7xl mx-auto">
       <header className="mb-8 flex items-center justify-between" id="tut-welcome">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-            <Wand2 className="text-indigo-500" />
+          <h1 className="text-4xl font-black tracking-tighter flex items-center gap-3 neon-text italic">
+            <Wand2 className="text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" size={32} />
             {t.title}
           </h1>
-          <p className="text-gray-400 mt-1">{t.subtitle}</p>
+          <p className="text-cyan-400/60 mt-1 font-mono text-xs uppercase tracking-widest">{t.subtitle}</p>
         </div>
         <div className="flex items-center gap-4">
           <button 
             onClick={startTutorial}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-900 border border-gray-800 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm font-medium"
+            className="neon-button px-4 py-2 rounded-lg text-sm flex items-center gap-2"
           >
             <HelpCircle size={18} />
             {t.tutorial}
           </button>
-          <div className="text-xs font-mono text-gray-500 bg-gray-900 px-3 py-1 rounded-full border border-gray-800">
-            v2.1.0-colorized
+          <div className="text-[10px] font-mono text-cyan-400/50 bg-slate-900/80 px-3 py-1 rounded-full border border-cyan-500/30 backdrop-blur-md">
+            SYSTEM_v2.1.0_STABLE
           </div>
         </div>
       </header>
@@ -1541,23 +1541,23 @@ export default function App() {
           </div>
 
           {/* Settings Section */}
-          <div id="tut-settings" className={`glass-panel ${isSidebarCollapsed ? 'p-4 flex justify-center cursor-pointer hover:bg-gray-800/50' : 'p-6'}`} onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}>
+          <div id="tut-settings" className={`glass-panel border-cyan-500/30 ${isSidebarCollapsed ? 'p-4 flex justify-center cursor-pointer hover:bg-cyan-500/10' : 'p-6'}`} onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}>
             {isSidebarCollapsed ? (
-              <Settings size={24} className="text-indigo-400" title={t.settings} />
+              <Settings size={24} className="text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" title={t.settings} />
             ) : (
               <>
                 <div className="flex items-center justify-between cursor-pointer mb-4" onClick={() => setIsSettingsCollapsed(!isSettingsCollapsed)}>
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
-                    <Settings size={18} className="text-indigo-400" /> {t.settings}
+                  <h2 className="text-lg font-black flex items-center gap-2 neon-text italic">
+                    <Settings size={18} className="text-cyan-400" /> {t.settings}
                   </h2>
-                  {isSettingsCollapsed ? <ChevronDown size={18} className="text-gray-500" /> : <ChevronUp size={18} className="text-gray-500" />}
+                  {isSettingsCollapsed ? <ChevronDown size={18} className="text-cyan-400/50" /> : <ChevronUp size={18} className="text-cyan-400/50" />}
                 </div>
                 {!isSettingsCollapsed && (
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-medium text-gray-400 mb-1 flex items-center gap-1"><Globe size={12}/> {t.uiLanguage}</label>
-                        <select value={uiLanguage} onChange={e => setUiLanguage(e.target.value as any)} className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <label className="block text-[10px] font-mono uppercase tracking-wider text-cyan-400/60 mb-1 flex items-center gap-1"><Globe size={10}/> {t.uiLanguage}</label>
+                        <select value={uiLanguage} onChange={e => setUiLanguage(e.target.value as any)} className="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg px-3 py-2 text-xs text-cyan-100 focus:outline-none focus:border-cyan-400 transition-colors">
                           <option value="fr">{t.french}</option>
                           <option value="en">{t.english}</option>
                           <option value="es">{t.spanish}</option>
@@ -1568,8 +1568,8 @@ export default function App() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-400 mb-1 flex items-center gap-1"><Globe size={12}/> {t.targetLanguage}</label>
-                        <select value={language} onChange={e => setLanguage(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                        <label className="block text-[10px] font-mono uppercase tracking-wider text-cyan-400/60 mb-1 flex items-center gap-1"><Globe size={10}/> {t.targetLanguage}</label>
+                        <select value={language} onChange={e => setLanguage(e.target.value)} className="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg px-3 py-2 text-xs text-cyan-100 focus:outline-none focus:border-cyan-400 transition-colors">
                           <option value="français">{t.french}</option>
                           <option value="anglais">{t.english}</option>
                           <option value="espagnol">{t.spanish}</option>
@@ -1582,8 +1582,8 @@ export default function App() {
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-medium text-gray-400 mb-1">{t.analysisModel}</label>
-                        <select value={analysisModel} onChange={e => setAnalysisModel(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                        <label className="block text-[10px] font-mono uppercase tracking-wider text-cyan-400/60 mb-1">{t.analysisModel}</label>
+                        <select value={analysisModel} onChange={e => setAnalysisModel(e.target.value)} className="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg px-2 py-2 text-[10px] text-cyan-100 focus:outline-none focus:border-cyan-400 transition-colors">
                           <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
                           <option value="gemini-3-pro-preview">Gemini 3.0 Pro</option>
                           <option value="gemini-3.1-flash-preview">Gemini 3.1 Flash</option>
@@ -1593,8 +1593,8 @@ export default function App() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-400 mb-1">{t.bibleModel}</label>
-                        <select value={bibleModel} onChange={e => setBibleModel(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                        <label className="block text-[10px] font-mono uppercase tracking-wider text-cyan-400/60 mb-1">{t.bibleModel}</label>
+                        <select value={bibleModel} onChange={e => setBibleModel(e.target.value)} className="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg px-2 py-2 text-[10px] text-cyan-100 focus:outline-none focus:border-cyan-400 transition-colors">
                           <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
                           <option value="gemini-3-pro-preview">Gemini 3.0 Pro</option>
                           <option value="gemini-3.1-flash-preview">Gemini 3.1 Flash</option>
@@ -1604,15 +1604,15 @@ export default function App() {
                         </select>
                       </div>
                       <div className="col-span-2">
-                        <label className="block text-xs font-medium text-gray-400 mb-1">{t.imageModel}</label>
-                        <select value={imageModel} onChange={e => setImageModel(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                        <label className="block text-[10px] font-mono uppercase tracking-wider text-cyan-400/60 mb-1">{t.imageModel}</label>
+                        <select value={imageModel} onChange={e => setImageModel(e.target.value)} className="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg px-2 py-2 text-[10px] text-cyan-100 focus:outline-none focus:border-cyan-400 transition-colors">
                           <option value="gemini-3.1-flash-image-preview">Gemini 3.1 Flash Image ({t.hq})</option>
                           <option value="gemini-2.5-flash-image">Gemini 2.5 Flash Image ({t.fast})</option>
                         </select>
                       </div>
                       <div className="col-span-2">
-                        <label className="block text-xs font-medium text-gray-400 mb-1">{t.videoModel}</label>
-                        <select value={videoModel} onChange={e => setVideoModel(e.target.value)} className="w-full bg-gray-900 border border-gray-700 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                        <label className="block text-[10px] font-mono uppercase tracking-wider text-cyan-400/60 mb-1">{t.videoModel}</label>
+                        <select value={videoModel} onChange={e => setVideoModel(e.target.value)} className="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg px-2 py-2 text-[10px] text-cyan-100 focus:outline-none focus:border-cyan-400 transition-colors">
                           <option value="veo-3.1-fast-generate-preview">Veo 3.1 Fast ({t.fast})</option>
                           <option value="veo-3.1-generate-preview">Veo 3.1 ({t.hq})</option>
                         </select>
@@ -1625,34 +1625,34 @@ export default function App() {
           </div>
 
           {/* Context Section */}
-          <div id="tut-bible" className={`glass-panel ${isSidebarCollapsed ? 'p-4 flex justify-center cursor-pointer hover:bg-gray-800/50' : 'p-6'}`} onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}>
+          <div id="tut-bible" className={`glass-panel border-emerald-500/30 ${isSidebarCollapsed ? 'p-4 flex justify-center cursor-pointer hover:bg-emerald-500/10' : 'p-6'}`} onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}>
             {isSidebarCollapsed ? (
-              <FileText size={24} className="text-emerald-400" title={t.contexte} />
+              <FileText size={24} className="text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" title={t.contexte} />
             ) : (
               <>
                 <div className="flex items-center justify-between cursor-pointer mb-4" onClick={() => setIsContextCollapsed(!isContextCollapsed)}>
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <h2 className="text-lg font-black flex items-center gap-2 neon-text italic">
                     <FileText size={18} className="text-emerald-400" /> {t.bibleSection}
                   </h2>
-                  {isContextCollapsed ? <ChevronDown size={18} className="text-gray-500" /> : <ChevronUp size={18} className="text-gray-500" />}
+                  {isContextCollapsed ? <ChevronDown size={18} className="text-emerald-400/50" /> : <ChevronUp size={18} className="text-emerald-400/50" />}
                 </div>
                 {!isContextCollapsed && (
                   <div className="space-y-4">
-                    <p className="text-sm text-gray-400 mb-4">
+                    <p className="text-xs font-mono text-emerald-400/60 mb-4 leading-relaxed">
                       {t.uploadPdf}
                     </p>
                     
                     {characterBible ? (
                       <div className="space-y-4">
                         {pdfFile && (
-                          <div className="flex items-center justify-between bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+                          <div className="flex items-center justify-between bg-slate-950/80 p-3 rounded-lg border border-emerald-500/30 backdrop-blur-md">
                             <div className="flex items-center gap-3 overflow-hidden">
-                              <File className="text-emerald-500 shrink-0" size={20} />
-                              <span className="text-sm text-gray-200 truncate">{pdfFile.name}</span>
+                              <File className="text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]" size={20} />
+                              <span className="text-xs font-bold text-emerald-100 truncate">{pdfFile.name}</span>
                             </div>
                             <button 
                               onClick={() => { setPdfFile(null); setCharacterBible(null); setMangaName(''); setChapterNumber(''); }}
-                              className="text-gray-500 hover:text-red-400 p-1"
+                              className="text-emerald-400/50 hover:text-red-400 p-1 transition-colors"
                               disabled={isProcessing}
                             >
                               <Archive size={16} />
@@ -1660,17 +1660,17 @@ export default function App() {
                           </div>
                         )}
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 text-sm text-emerald-400 flex items-center gap-2 justify-center bg-emerald-500/10 py-2 rounded-lg border border-emerald-500/20">
-                            <CheckCircle size={16} /> {t.bibleExtracted}
+                          <div className="flex-1 text-[10px] font-mono uppercase tracking-wider text-emerald-400 flex items-center gap-2 justify-center bg-emerald-500/10 py-2 rounded-lg border border-emerald-500/20">
+                            <CheckCircle size={14} /> {t.bibleExtracted}
                           </div>
                           {!pdfFile && (
                             <button 
                               onClick={() => { setPdfFile(null); setCharacterBible(null); setMangaName(''); setChapterNumber(''); }}
-                              className="bg-gray-800 hover:bg-red-500/20 text-gray-400 hover:text-red-400 p-2 rounded-lg border border-gray-700 transition-colors"
+                              className="bg-slate-950/80 hover:bg-red-500/20 text-emerald-400/50 hover:text-red-400 p-2 rounded-lg border border-emerald-500/30 transition-all"
                               title={t.change}
                               disabled={isProcessing}
                             >
-                              <RefreshCw size={16} />
+                              <RefreshCw size={14} />
                             </button>
                           )}
                         </div>
@@ -1679,14 +1679,14 @@ export default function App() {
                       <>
                         {pdfFile ? (
                           <div className="space-y-4">
-                            <div className="flex items-center justify-between bg-gray-900/50 p-3 rounded-lg border border-gray-800">
+                            <div className="flex items-center justify-between bg-slate-950/80 p-3 rounded-lg border border-emerald-500/30">
                               <div className="flex items-center gap-3 overflow-hidden">
-                                <File className="text-emerald-500 shrink-0" size={20} />
-                                <span className="text-sm text-gray-200 truncate">{pdfFile.name}</span>
+                                <File className="text-emerald-400" size={20} />
+                                <span className="text-xs font-bold text-emerald-100 truncate">{pdfFile.name}</span>
                               </div>
                               <button 
                                 onClick={() => { setPdfFile(null); setCharacterBible(null); setMangaName(''); setChapterNumber(''); }}
-                                className="text-gray-500 hover:text-red-400 p-1"
+                                className="text-emerald-400/50 hover:text-red-400 p-1 transition-colors"
                                 disabled={isExtractingBible || isProcessing}
                               >
                                 <Archive size={16} />
@@ -1695,12 +1695,12 @@ export default function App() {
                             <button
                               onClick={handleExtractBible}
                               disabled={isExtractingBible || isProcessing}
-                              className="w-full py-2 rounded-lg font-medium flex items-center justify-center gap-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 transition-colors border border-emerald-500/30"
+                              className="w-full py-2 rounded-lg font-mono text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-all border border-emerald-500/30"
                             >
                               {isExtractingBible ? (
-                                <><Loader2 size={16} className="animate-spin" /> {t.extracting}</>
+                                <><Loader2 size={14} className="animate-spin" /> {t.extracting}</>
                               ) : (
-                                <><Users size={16} /> {t.extractBible}</>
+                                <><Users size={14} /> {t.extractBible}</>
                               )}
                             </button>
                           </div>
@@ -1711,43 +1711,43 @@ export default function App() {
                               onDragOver={(e) => { e.preventDefault(); setIsDraggingPdf(true); }}
                               onDragLeave={(e) => { e.preventDefault(); setIsDraggingPdf(false); }}
                               onDrop={handlePdfDrop}
-                              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-colors ${
+                              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
                                 isDraggingPdf 
-                                  ? 'border-emerald-500 bg-emerald-500/10' 
-                                  : 'border-gray-700 hover:border-emerald-500/50 bg-gray-900/50'
+                                  ? 'border-emerald-500 bg-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.2)]' 
+                                  : 'border-emerald-500/30 hover:border-emerald-400/50 bg-slate-950/50'
                               }`}
                             >
-                              <File className={`mx-auto mb-2 ${isDraggingPdf ? 'text-emerald-400' : 'text-gray-500'}`} size={24} />
-                              <p className="text-sm text-gray-300 font-medium">
+                              <File className={`mx-auto mb-2 ${isDraggingPdf ? 'text-emerald-400' : 'text-emerald-400/40'}`} size={24} />
+                              <p className="text-[10px] font-mono uppercase tracking-widest text-emerald-100">
                                 {isDraggingPdf ? t.uploadImage : t.uploadImage}
                               </p>
                             </div>
 
                             <div className="flex items-center gap-2 my-2">
-                              <div className="h-[1px] flex-1 bg-gray-800"></div>
-                              <span className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">{t.or}</span>
-                              <div className="h-[1px] flex-1 bg-gray-800"></div>
+                              <div className="h-[1px] flex-1 bg-emerald-500/20"></div>
+                              <span className="text-[8px] font-black text-emerald-500/40 uppercase tracking-[0.3em]">{t.or}</span>
+                              <div className="h-[1px] flex-1 bg-emerald-500/20"></div>
                             </div>
 
-                            <div className="space-y-3 p-4 rounded-xl bg-gray-900/50 border border-gray-800">
+                            <div className="space-y-3 p-4 rounded-xl bg-slate-950/80 border border-emerald-500/30">
                               <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">{t.mangaName}</label>
+                                <label className="text-[8px] font-black text-emerald-500/40 uppercase tracking-widest ml-1">{t.mangaName}</label>
                                 <input 
                                   type="text"
                                   value={mangaName}
                                   onChange={(e) => setMangaName(e.target.value)}
                                   placeholder="ex: One Piece"
-                                  className="w-full bg-black/50 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
+                                  className="w-full bg-black/50 border border-emerald-500/20 rounded-lg px-3 py-2 text-xs text-emerald-100 focus:outline-none focus:border-emerald-400/50 transition-colors"
                                 />
                               </div>
                               <div className="space-y-1">
-                                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">{t.chapter}</label>
+                                <label className="text-[8px] font-black text-emerald-500/40 uppercase tracking-widest ml-1">{t.chapter}</label>
                                 <input 
                                   type="text"
                                   value={chapterNumber}
                                   onChange={(e) => setChapterNumber(e.target.value)}
                                   placeholder="ex: 1000"
-                                  className="w-full bg-black/50 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
+                                  className="w-full bg-black/50 border border-emerald-500/20 rounded-lg px-3 py-2 text-xs text-emerald-100 focus:outline-none focus:border-emerald-400/50 transition-colors"
                                 />
                               </div>
                               <button
@@ -1784,13 +1784,13 @@ export default function App() {
           </div>
 
           {/* Upload Section */}
-          <div id="tut-upload" className={`glass-panel ${isSidebarCollapsed ? 'p-4 flex justify-center cursor-pointer hover:bg-gray-800/50' : 'p-6'}`} onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}>
+          <div id="tut-upload" className={`glass-panel border-cyan-500/30 ${isSidebarCollapsed ? 'p-4 flex justify-center cursor-pointer hover:bg-cyan-500/10' : 'p-6'}`} onClick={() => isSidebarCollapsed && setIsSidebarCollapsed(false)}>
             {isSidebarCollapsed ? (
-              <Upload size={24} className="text-indigo-400" title={t.uploadImage} />
+              <Upload size={24} className="text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" title={t.uploadImage} />
             ) : (
               <>
-                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Upload size={18} className="text-indigo-400" /> {t.pageSection}
+                <h2 className="text-lg font-black mb-4 flex items-center gap-2 neon-text italic">
+                  <Upload size={18} className="text-cyan-400" /> {t.pageSection}
                 </h2>
                 
                 {!previewUrl ? (
@@ -1799,25 +1799,26 @@ export default function App() {
                     onDragOver={(e) => { e.preventDefault(); setIsDraggingImage(true); }}
                     onDragLeave={(e) => { e.preventDefault(); setIsDraggingImage(false); }}
                     onDrop={handleImageDrop}
-                    className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+                    className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
                       isDraggingImage 
-                        ? 'border-indigo-500 bg-indigo-500/10' 
-                        : 'border-gray-700 hover:border-indigo-500 bg-gray-900/50'
+                        ? 'border-cyan-500 bg-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.2)]' 
+                        : 'border-cyan-500/30 hover:border-cyan-400/50 bg-slate-950/50'
                     }`}
                   >
-                    <ImageIcon className={`mx-auto mb-3 ${isDraggingImage ? 'text-indigo-400' : 'text-gray-500'}`} size={32} />
-                    <p className="text-sm text-gray-300 font-medium">
+                    <ImageIcon className={`mx-auto mb-3 ${isDraggingImage ? 'text-cyan-400' : 'text-cyan-400/40'}`} size={32} />
+                    <p className="text-[10px] font-mono uppercase tracking-widest text-cyan-100">
                       {isDraggingImage ? t.uploadImage : t.uploadImage}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">{t.supportedFormats}</p>
+                    <p className="text-[8px] font-mono text-cyan-400/40 mt-1 uppercase tracking-tighter">{t.supportedFormats}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <div className="relative rounded-xl overflow-hidden border border-gray-800 bg-black group">
+                    <div className="relative rounded-xl overflow-hidden border border-cyan-500/30 bg-black group">
                       <img src={previewUrl} alt="Preview" className="w-full h-auto object-contain max-h-[300px] opacity-80 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute inset-0 pointer-events-none border-2 border-cyan-400/30"></div>
                       <button 
                         onClick={() => { setFile(null); setPreviewUrl(null); }}
-                        className="absolute top-2 right-2 bg-black/70 hover:bg-red-500/80 text-white text-xs px-2 py-1 rounded backdrop-blur-sm transition-colors"
+                        className="absolute top-2 right-2 bg-slate-950/80 hover:bg-red-500/80 text-cyan-400 hover:text-white text-[8px] font-mono uppercase tracking-widest px-2 py-1 rounded border border-cyan-500/30 backdrop-blur-sm transition-all"
                         disabled={isProcessing}
                       >
                         {t.change}
@@ -1828,16 +1829,12 @@ export default function App() {
                       id="tut-process"
                       onClick={startWorkflow}
                       disabled={!file || isProcessing || isExtractingBible}
-                      className={`w-full py-3 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${
-                        !file || isProcessing || isExtractingBible
-                          ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
-                          : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]'
-                      }`}
+                      className="neon-button w-full py-4 rounded-xl flex items-center justify-center gap-3"
                     >
                       {isProcessing ? (
-                        <><Loader2 size={18} className="animate-spin" /> {t.processing}</>
+                        <><Loader2 size={20} className="animate-spin" /> {t.processing}</>
                       ) : (
-                        <><Play size={18} /> {characterBible ? t.processWithContext : t.process}</>
+                        <><Play size={20} /> {characterBible ? t.processWithContext : t.process}</>
                       )}
                     </button>
                   </div>
@@ -1895,6 +1892,120 @@ export default function App() {
         {/* RIGHT COLUMN: Results Viewer (Panels) */}
         <div id="tut-results" className={`transition-all duration-300 flex flex-col gap-6 ${isSidebarCollapsed ? 'lg:col-span-11' : 'lg:col-span-8'}`}>
           
+          {isProcessing && (
+            <div className="glass-panel p-8 scanline-effect relative overflow-hidden min-h-[500px] flex flex-col items-center justify-center border-2 border-cyan-500/50">
+              <div className="absolute inset-0 pointer-events-none">
+                {/* Energy Particles */}
+                {[...Array(20)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="energy-particle bg-cyan-400"
+                    style={{
+                      top: `${Math.random() * 100}%`,
+                      left: `${Math.random() * 100}%`,
+                      opacity: Math.random(),
+                      animation: `pulse ${2 + Math.random() * 3}s infinite ease-in-out ${Math.random() * 2}s`
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="flex flex-col md:flex-row items-center gap-12 w-full max-w-4xl z-10">
+                {/* Source Manga Panel */}
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-cyan-500 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="relative bg-slate-950 p-2 rounded-lg border border-cyan-500/50">
+                    <img src={previewUrl || ''} alt="Source" className="w-48 h-auto grayscale brightness-110 contrast-125" />
+                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none border-2 border-cyan-400/30 animate-pulse"></div>
+                  </div>
+                  <p className="text-[10px] font-bold text-cyan-400 mt-2 text-center uppercase tracking-widest">Manga Source</p>
+                </div>
+
+                {/* Energy Flow Animation */}
+                <div className="hidden md:flex flex-col items-center gap-2 flex-1">
+                  <div className="w-full h-px bg-gradient-to-r from-cyan-500/0 via-cyan-400 to-cyan-500/0 relative">
+                    <div className="absolute top-1/2 left-0 w-full h-8 -translate-y-1/2 overflow-hidden">
+                      {[...Array(5)].map((_, i) => (
+                        <div 
+                          key={i} 
+                          className="absolute h-px bg-cyan-400 shadow-[0_0_8px_cyan]"
+                          style={{
+                            width: '40px',
+                            left: '-40px',
+                            top: `${i * 6}px`,
+                            opacity: 0.5,
+                            animation: `flow ${1 + Math.random()}s linear infinite ${i * 0.2}s`
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-cyan-500/40 uppercase tracking-[0.3em]">Processing Neural Engine</span>
+                </div>
+
+                {/* Target Anime Frame Placeholder */}
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-blue-500 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="relative bg-slate-950 p-2 rounded-lg border border-blue-500/50 w-64 aspect-video flex items-center justify-center overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 animate-pulse"></div>
+                    <Loader2 className="text-cyan-400 animate-spin" size={32} />
+                    <div className="absolute bottom-2 right-2 text-[8px] font-mono text-cyan-400/50">16:9_CINEMATIC_OUTPUT</div>
+                  </div>
+                  <p className="text-[10px] font-bold text-blue-400 mt-2 text-center uppercase tracking-widest">Anime Output</p>
+                </div>
+              </div>
+
+              {/* Progress Bar inspired by image */}
+              <div className="mt-16 w-full max-w-3xl">
+                <div className="flex justify-between items-end mb-2">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-1">Smart Inpainting Process</span>
+                    <span className="text-xs font-mono text-cyan-500/60 italic">Transforming Panel: "Neural Reconstruction"</span>
+                  </div>
+                  <span className="text-2xl font-black neon-text italic">
+                    {Math.round((steps.filter(s => s.status === 'done').length / steps.length) * 100)}%
+                  </span>
+                </div>
+                <div className="progress-bar-container">
+                  <div 
+                    className="progress-bar-fill" 
+                    style={{ width: `${(steps.filter(s => s.status === 'done').length / steps.length) * 100}%` }}
+                  ></div>
+                </div>
+                
+                {/* Step Icons inspired by image */}
+                <div className="mt-6 flex justify-between items-center px-4">
+                  {steps.map((step, i) => (
+                    <div key={step.id} className="flex items-center gap-4">
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-500 ${step.status === 'done' ? 'bg-cyan-500 border-cyan-400 text-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.5)]' : step.status === 'running' ? 'bg-slate-900 border-cyan-400 text-cyan-400 animate-pulse' : 'bg-slate-950 border-slate-800 text-slate-700'}`}>
+                          {i === 0 ? <FileText size={20} /> : i === 1 ? <ImageIcon size={20} /> : <Video size={20} />}
+                        </div>
+                        <span className={`text-[8px] font-bold uppercase tracking-tighter ${step.status === 'done' ? 'text-cyan-400' : 'text-slate-600'}`}>{step.title.split(' ')[0]}</span>
+                      </div>
+                      {i < steps.length - 1 && (
+                        <div className={`w-8 h-px ${steps[i+1].status !== 'idle' ? 'bg-cyan-400 shadow-[0_0_5px_cyan]' : 'bg-slate-800'}`}></div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <style>{`
+                @keyframes flow {
+                  0% { left: -40px; opacity: 0; }
+                  20% { opacity: 1; }
+                  80% { opacity: 1; }
+                  100% { left: 100%; opacity: 0; }
+                }
+                @keyframes pulse {
+                  0%, 100% { transform: scale(1); opacity: 0.3; }
+                  50% { transform: scale(1.5); opacity: 1; }
+                }
+              `}</style>
+            </div>
+          )}
+
           {panels.length === 0 && !isProcessing && (
             <div className="glass-panel p-12 flex flex-col items-center justify-center text-gray-500 h-full">
               <FileText size={48} className="mb-4 opacity-50" />
