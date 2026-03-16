@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, Play, Pause, CheckCircle, Loader2, Image as ImageIcon, FileText, Video, Wand2, AlertCircle, RefreshCw, Palette, Download, Settings, Pencil, MessageSquare, Archive, Users, File, ChevronDown, ChevronUp, PanelLeftClose, PanelLeftOpen, Globe, List, MonitorPlay, Copy, Check, Search, HelpCircle, ChevronRight, X } from 'lucide-react';
+import { Upload, Play, Pause, CheckCircle, Loader2, Image as ImageIcon, FileText, Video, Wand2, AlertCircle, RefreshCw, Palette, Download, Settings, Pencil, MessageSquare, Archive, Users, File, ChevronDown, ChevronUp, PanelLeftClose, PanelLeftOpen, Globe, List, MonitorPlay, Copy, Check, Search, HelpCircle, ChevronRight, X, ArrowUp, Layout } from 'lucide-react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { analyzeMangaPage, generateAnimeFrame, generateVideo, editAnimeFrame, extractCharacterBible, searchCharacterBible } from './lib/ai';
@@ -178,7 +178,18 @@ const translations = {
     tutStep5Title: "Lancer le Workflow",
     tutStep5Desc: "Cliquez ici pour lancer l'analyse, la colorisation et la préparation de l'animation.",
     tutStep6Title: "Résultats & Animation",
-    tutStep6Desc: "Visualisez les cases extraites, modifiez les frames et générez vos vidéos finales."
+    tutStep6Desc: "Visualisez les cases extraites, modifiez les frames et générez vos vidéos finales.",
+    continueStory: "Continuer l'histoire (Continuité du script)",
+    scrollHint: "Le résultat se génère plus bas dans la page...",
+    navBible: "Bible",
+    navScript: "Script",
+    navPanels: "Cases",
+    navTop: "Haut",
+    manualScript: "Script précédent (optionnel)",
+    manualScriptPlaceholder: "Collez ici le script de la page précédente pour assurer la continuité narrative et la numérotation des scènes...",
+    newGeneration: "Nouvelle Page / Réinitialiser",
+    clearResults: "Effacer les résultats actuels",
+    uploadScript: "Uploader un script (.txt)"
   },
   en: {
     title: "Manga-to-Anime Studio",
@@ -296,7 +307,18 @@ const translations = {
     tutStep5Title: "Start Workflow",
     tutStep5Desc: "Click here to start analysis, colorization, and animation preparation.",
     tutStep6Title: "Results & Animation",
-    tutStep6Desc: "View extracted panels, edit frames, and generate your final videos."
+    tutStep6Desc: "View extracted panels, edit frames, and generate your final videos.",
+    continueStory: "Continue Story (Script Continuity)",
+    scrollHint: "The result is being generated further down the page...",
+    navBible: "Bible",
+    navScript: "Script",
+    navPanels: "Panels",
+    navTop: "Top",
+    manualScript: "Previous Script (optional)",
+    manualScriptPlaceholder: "Paste the script from the previous page here to ensure narrative continuity and scene numbering...",
+    newGeneration: "New Page / Reset",
+    clearResults: "Clear current results",
+    uploadScript: "Upload script (.txt)"
   },
   es: {
     title: "Manga-to-Anime Studio",
@@ -941,6 +963,9 @@ export default function App() {
   const [isContextCollapsed, setIsContextCollapsed] = useState(false);
   const [isDraggingPdf, setIsDraggingPdf] = useState(false);
   const [isDraggingImage, setIsDraggingImage] = useState(false);
+  const [continueStory, setContinueStory] = useState(false);
+  const [previousScript, setPreviousScript] = useState<string | undefined>(undefined);
+  const [showScrollNav, setShowScrollNav] = useState(false);
 
   const panelsRef = useRef<PanelData[]>([]);
   useEffect(() => {
@@ -965,6 +990,19 @@ export default function App() {
 
   const imageInputRef = useRef<HTMLInputElement>(null);
   const pdfInputRef = useRef<HTMLInputElement>(null);
+  const scriptInputRef = useRef<HTMLInputElement>(null);
+
+  const handleScriptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        setPreviousScript(event.target.result as string);
+      }
+    };
+    reader.readAsText(file);
+  };
 
   const playSound = (type: 'done' | 'error' | 'success') => {
     try {
@@ -1404,10 +1442,19 @@ export default function App() {
 
       // STEP 1: Analyze & Extract Panels
       updateStep(1, 'running');
-      const extractedData = await analyzeMangaPage(base64Image, mimeType, characterBible, analysisModel, language);
+      const extractedData = await analyzeMangaPage(
+        base64Image, 
+        mimeType, 
+        characterBible, 
+        analysisModel, 
+        language,
+        continueStory ? previousScript : undefined
+      );
       
       setPageAnalysis(extractedData.pageAnalysis);
       setGlobalScript(extractedData.globalScript);
+      setPreviousScript(extractedData.globalScript); // Store for next time
+      setShowScrollNav(true); // Show navigation once we have results
 
       const initializedPanels: PanelData[] = await Promise.all(extractedData.panels.map(async (p: any, index: number) => {
         let croppedImageUrl;
@@ -1492,6 +1539,28 @@ export default function App() {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const resetWorkflow = () => {
+    // Carry over current script to previous script for continuity
+    if (globalScript) {
+      setPreviousScript(globalScript);
+      setContinueStory(true);
+    }
+    
+    setPanels([]);
+    setPageAnalysis(null);
+    setGlobalScript(null);
+    setSteps(prev => prev.map(s => ({ ...s, status: 'idle' })));
+    setShowScrollNav(false);
+    setError(null);
+    // We keep characterBible as requested
+    setFile(null);
+    setPreviewUrl(null);
+    if (imageInputRef.current) imageInputRef.current.value = '';
+    
+    // Scroll back to top to start fresh
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -1825,18 +1894,62 @@ export default function App() {
                       </button>
                     </div>
 
-                    <button
-                      id="tut-process"
-                      onClick={startWorkflow}
-                      disabled={!file || isProcessing || isExtractingBible}
-                      className="neon-button w-full py-4 rounded-xl flex items-center justify-center gap-3"
-                    >
-                      {isProcessing ? (
-                        <><Loader2 size={20} className="animate-spin" /> {t.processing}</>
-                      ) : (
-                        <><Play size={20} /> {characterBible ? t.processWithContext : t.process}</>
-                      )}
-                    </button>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-2 px-2 py-1 bg-slate-900/50 border border-cyan-500/20 rounded-lg">
+                          <input 
+                            type="checkbox" 
+                            id="continue-story" 
+                            checked={continueStory} 
+                            onChange={(e) => setContinueStory(e.target.checked)}
+                            className="w-4 h-4 rounded border-cyan-500/30 bg-slate-950 text-cyan-500 focus:ring-cyan-500/50"
+                          />
+                          <label htmlFor="continue-story" className="text-[10px] font-mono uppercase tracking-wider text-cyan-400/80 cursor-pointer select-none">
+                            {t.continueStory}
+                          </label>
+                        </div>
+
+                        {continueStory && (
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                              <label className="text-[10px] font-mono uppercase tracking-widest text-cyan-400/60 ml-1">
+                                {t.manualScript}
+                              </label>
+                              <button 
+                                onClick={() => scriptInputRef.current?.click()}
+                                className="text-[9px] font-mono uppercase tracking-tighter text-cyan-400 hover:text-cyan-300 flex items-center gap-1 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20 transition-all"
+                              >
+                                <Upload size={10} /> {t.uploadScript}
+                              </button>
+                            </div>
+                            <textarea
+                              value={previousScript || ''}
+                              onChange={(e) => setPreviousScript(e.target.value)}
+                              placeholder={t.manualScriptPlaceholder}
+                              className="w-full bg-slate-950/80 border border-cyan-500/30 rounded-lg p-3 text-xs text-cyan-100 focus:outline-none focus:border-cyan-400/50 min-h-[100px] font-mono"
+                            />
+                            <input 
+                              type="file" 
+                              accept=".txt" 
+                              className="hidden" 
+                              ref={scriptInputRef}
+                              onChange={handleScriptUpload}
+                            />
+                          </div>
+                        )}
+
+                        <button
+                        id="tut-process"
+                        onClick={startWorkflow}
+                        disabled={!file || isProcessing || isExtractingBible}
+                        className="neon-button w-full py-4 rounded-xl flex items-center justify-center gap-3"
+                      >
+                        {isProcessing ? (
+                          <><Loader2 size={20} className="animate-spin" /> {t.processing}</>
+                        ) : (
+                          <><Play size={20} /> {characterBible ? t.processWithContext : t.process}</>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 )}
                 <input 
@@ -1955,6 +2068,12 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Scroll Hint */}
+              <div className="mt-8 flex flex-col items-center animate-bounce">
+                <p className="text-cyan-400 font-mono text-[10px] uppercase tracking-widest mb-2">{t.scrollHint}</p>
+                <ChevronDown className="text-cyan-400" size={24} />
+              </div>
+
               {/* Progress Bar inspired by image */}
               <div className="mt-16 w-full max-w-3xl">
                 <div className="flex justify-between items-end mb-2">
@@ -2019,6 +2138,13 @@ export default function App() {
                 {panels.length > 0 && (
                   <>
                     <button
+                      onClick={resetWorkflow}
+                      className="bg-red-900/40 hover:bg-red-900/60 text-red-200 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors border border-red-500/30"
+                      title={t.clearResults}
+                    >
+                      <RefreshCw size={16} /> {t.newGeneration}
+                    </button>
+                    <button
                       onClick={generateAllVideos}
                       disabled={videoBatchStatus === 'running' || isProcessing}
                       className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors disabled:opacity-50"
@@ -2052,6 +2178,7 @@ export default function App() {
           )}
 
           {/* Global Analysis & Script Section */}
+          <div id="bible-section">
           {characterBible && (
             <div className="glass-panel p-6 border-l-4 border-l-emerald-500">
               <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsBibleCollapsed(!isBibleCollapsed)}>
@@ -2087,6 +2214,9 @@ export default function App() {
             </div>
           )}
 
+          </div>
+
+          <div id="script-section">
           {(pageAnalysis || globalScript) && (
             <div className="glass-panel p-6 border-l-4 border-l-indigo-500">
               <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsAnalysisCollapsed(!isAnalysisCollapsed)}>
@@ -2114,9 +2244,12 @@ export default function App() {
             </div>
           )}
 
+          </div>
+
           {/* Individual Panels */}
+          <div id="panels-section" className="flex flex-col gap-6">
           {panels.map((panel, index) => (
-            <div key={panel.id} className="glass-panel p-6 flex flex-col gap-4">
+            <div key={panel.id} id={`panel-${index}`} className="glass-panel p-6 flex flex-col gap-4">
               <div className="flex items-start justify-between border-b border-gray-800 pb-4 cursor-pointer" onClick={() => updatePanel(panel.id, { isCollapsed: !panel.isCollapsed })}>
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-indigo-400 flex items-center gap-2">
@@ -2498,6 +2631,7 @@ export default function App() {
               )}
             </div>
           ))}
+          </div>
 
         </div>
 
@@ -2567,6 +2701,41 @@ export default function App() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Scroll Navigation */}
+      {showScrollNav && (
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
+          <button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="bg-slate-900/80 border border-cyan-500/30 p-3 rounded-full text-cyan-400 hover:bg-cyan-500/20 transition-all shadow-[0_0_15px_rgba(34,211,238,0.3)] backdrop-blur-md"
+            title={t.navTop}
+          >
+            <ArrowUp size={20} />
+          </button>
+          <div className="bg-slate-900/80 border border-cyan-500/30 p-2 rounded-2xl flex flex-col gap-2 backdrop-blur-md shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+            <button 
+              onClick={() => document.getElementById('bible-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="p-2 rounded-lg text-emerald-400 hover:bg-emerald-500/20 transition-all"
+              title={t.navBible}
+            >
+              <Users size={20} />
+            </button>
+            <button 
+              onClick={() => document.getElementById('script-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="p-2 rounded-lg text-indigo-400 hover:bg-indigo-500/20 transition-all"
+              title={t.navScript}
+            >
+              <FileText size={20} />
+            </button>
+            <button 
+              onClick={() => document.getElementById('panels-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="p-2 rounded-lg text-cyan-400 hover:bg-cyan-500/20 transition-all"
+              title={t.navPanels}
+            >
+              <Layout size={20} />
+            </button>
           </div>
         </div>
       )}

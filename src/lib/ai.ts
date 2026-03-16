@@ -5,13 +5,17 @@ import { GoogleGenAI, Type } from '@google/genai';
 // which is injected into process.env.API_KEY by the AI Studio platform.
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY || process.env.GEMINI_API_KEY });
 
-export async function analyzeMangaPage(base64Image: string, mimeType: string, characterBible?: any, modelName: string = 'gemini-3.1-pro-preview', language: string = 'français') {
+export async function analyzeMangaPage(base64Image: string, mimeType: string, characterBible?: any, modelName: string = 'gemini-3.1-pro-preview', language: string = 'français', previousScript?: string) {
   const ai = getAI();
   
   // Remove the data URI prefix if present
   const base64Data = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
 
   let promptText = `Analyse cette page de manga en détail. Analyse attentivement LE STYLE DE DESSIN ET LES COULEURS (ou déduis une palette de couleurs cohérente si c'est en noir et blanc). Fournis au format JSON :\n1. pageAnalysis: Un résumé global très détaillé incluant les lieux, les personnages présents, leurs émotions, l'action en cours, et une analyse poussée du STYLE DE DESSIN et de la PALETTE DE COULEURS.\n2. globalScript: Un script global très détaillé au format anime (avec descriptions précises des lieux, des personnages, des émotions, des actions, indications de mise en scène, voix off, effets sonores).\n3. panels: Un tableau pour chaque bulle de dialogue ou action clé. Pour chaque panneau :\n   - speaker: Le nom du personnage qui parle (ou 'Narrator' / 'Action' si pas de dialogue).\n   - dialogue: Le texte de la bulle (TRADUIT EN ${language.toUpperCase()}).\n   - boundingBox: Les coordonnées de la case (panel) du manga correspondant à cette action. Utilise un objet avec ymin, xmin, ymax, xmax (valeurs proportionnelles entre 0 et 1000, où 0,0 est le coin supérieur gauche et 1000,1000 le coin inférieur droit de l'image originale).\n   - firstFramePrompt: Description visuelle TRÈS DÉTAILLÉE EN ANGLAIS du début de l'action (personnages, émotions, décor, pose). INCLUS OBLIGATOIREMENT LA PALETTE DE COULEURS ET LE STYLE DE DESSIN ANALYSÉ. AJOUTE À LA FIN: '16:9, full frame, NO speech bubbles, NO text, NO manga panels, NO borders'.\n   - lastFramePrompt: Description visuelle TRÈS DÉTAILLÉE EN ANGLAIS de la fin de l'action. INCLUS LA PALETTE DE COULEURS ET LE STYLE DE DESSIN. AJOUTE: '16:9, full frame, NO speech bubbles, NO text, NO manga panels, NO borders'.\n   - videoPrompt: Un prompt vidéo TRÈS DÉTAILLÉ EN ANGLAIS optimisé pour un générateur vidéo (ex: Veo). Décris l'action comme une prise de vue cinématographique ('Cinematic shot of...'). Si le personnage parle, décris-le en train de parler ('talking, lips moving'). Inclus les mouvements de caméra, les émotions, l'ambiance lumineuse.`;
+
+  if (previousScript) {
+    promptText += `\n\nCONTEXTE DU SCRIPT PRÉCÉDENT :\nVoici le script de la page précédente pour assurer la continuité de l'histoire :\n${previousScript}\n\nREPRENDS LA NUMÉROTATION DES SCÈNES À PARTIR DE LA DERNIÈRE SCÈNE DU SCRIPT PRÉCÉDENT. Assure-toi que l'action s'enchaîne de manière fluide et cohérente avec ce qui précède.`;
+  }
 
   if (characterBible) {
     promptText += `\n\nIMPORTANT - BIBLE DES PERSONNAGES ET STYLE GLOBAL :\nVoici les informations extraites de l'oeuvre complète :\nStyle Global: ${characterBible.globalStyle}\nPersonnages:\n${characterBible.characters.map((c: any) => `- ${c.name}: ${c.description}. Couleurs: ${c.colorPalette}`).join('\n')}\n\nUTILISE CES DESCRIPTIONS ET COULEURS EXACTES dans les firstFramePrompt et lastFramePrompt lorsque ces personnages apparaissent dans la page.`;
