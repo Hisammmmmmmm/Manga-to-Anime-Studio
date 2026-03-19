@@ -174,21 +174,44 @@ def launch_your_app():
         print("   Veuillez éditer la fonction launch_your_app() dans launcher.py")
 
 def main():
-    print("🎬 Manga-to-Anime Studio - Lanceur Windows")
-    print("=" * 50)
-    
-    # Étape 1 : Gestion de l'authentification
-    config = load_config()
-    
-    # Étape 2 : Initialisation du client Google (à adapter à votre code)
-    client = initialize_google_client(config)
-    # Si votre app a besoin du client global, vous pourriez le stocker dans un module
-    # Exemple : import myapp; myapp.google_client = client
-    
-    # Étape 3 : Lancement de votre application réelle
-    launch_your_app()
-    
-    print("\n👋 Lancereur terminé. Votre app peut continuer à s'exécuter en arrière-plan.")
+    try:
+        print("🎬 Manga-to-Anime Studio - Lanceur Windows")
+        print("=" * 50)
+        
+        # Option pour réinitialiser
+        if CONFIG_PATH.exists():
+            print(f"💡 Configuration trouvée dans {CONFIG_PATH}")
+            print("👉 Appuyez sur 'R' dans les 3 secondes pour réinitialiser la configuration...")
+            import msvcrt
+            import time
+            start_time = time.time()
+            reset = False
+            while time.time() - start_time < 3:
+                if msvcrt.kbhit():
+                    if msvcrt.getch().decode().lower() == 'r':
+                        reset = True
+                        break
+            if reset:
+                os.remove(CONFIG_PATH)
+                print("🗑️ Configuration supprimée. Nouvelle configuration requise.")
+
+        # Étape 1 : Gestion de l'authentification
+        config = load_config()
+        
+        # Étape 2 : Initialisation du client Google
+        client = initialize_google_client(config)
+        
+        # Étape 3 : Lancement de votre application réelle
+        launch_your_app()
+        
+        print("\n👋 Lanceur terminé.")
+        input("Appuyez sur Entrée pour quitter...")
+
+    except Exception as e:
+        print(f"\n❌ UNE ERREUR CRITIQUE EST SURVENUE :")
+        print(f"Détails : {e}")
+        print("\n" + "=" * 50)
+        input("Appuyez sur Entrée pour fermer cette fenêtre...")
 
 if __name__ == "__main__":
     main()
