@@ -137,7 +137,6 @@ def launch_your_app():
         print(f"📍 Lancement de {APP_ENTRY_POINT} en tant que sous-processus")
         try:
             # On lance votre app comme un processus séparé
-            # Cela permet de garder le launcher actif pour gérer les erreurs éventuelles
             process = subprocess.Popen(
                 [sys.executable, APP_ENTRY_POINT],
                 stdout=subprocess.PIPE,
@@ -145,13 +144,6 @@ def launch_your_app():
                 text=True
             )
             
-            # Optionnel : afficher la sortie en temps réel
-            # for line in process.stdout:
-            #     print(line, end='')
-            
-            # Attendre la fin (ou non, selon si votre app est bloquante)
-            # Si votre app lance une interface web et se termine immédiatement,
-            # vous pourriez ne pas vouloir attendre ici.
             stdout, stderr = process.communicate(timeout=30)
             if stdout:
                 print("📥 Sortie de l'app :", stdout[:500] + ("..." if len(stdout) > 500 else ""))
@@ -168,27 +160,18 @@ def launch_your_app():
             print("   Vérifiez que APP_ENTRY_POINT dans launcher.py pointe vers votre fichier principal")
         except subprocess.TimeoutExpired:
             print("⏱️  L'app s'exécute toujours en arrière-plan (timeout atteint)")
-            process.terminate()
         except Exception as e:
             print(f"❌ Erreur lors du lancement : {e}")
 
     # CAS 2 : Votre app est une interface web locale (Streamlit, Gradio, FastAPI, etc.)
-    # Décommentez et adaptez la section suivante si c'est votre cas :
-    """
     elif APP_ENTRY_POINT.startswith("http") or "streamlit" in APP_ENTRY_POINT or "gradio" in APP_ENTRY_POINT:
         print(f"🌐 Lancement de l'interface web : {APP_ENTRY_POINT}")
         webbrowser.open(APP_ENTRY_POINT)
-        # Ici, vous auriez probablement démarré un serveur local avant d'ouvrir le navigateur
-    """
 
-    # CAS 3 : Votre app nécessite une initialisation spéciale avant de lancer
+    # CAS 3 : Autre mode de lancement
     else:
         print(f"⚠️  Mode de lancement non reconnu pour : {APP_ENTRY_POINT}")
         print("   Veuillez éditer la fonction launch_your_app() dans launcher.py")
-        print("   Selon votre projet, vous pourriez avoir besoin de :")
-        print("   - Importer et appeler une fonction principale directement")
-        print("   - Lancer un serveur web local puis ouvrir un navigateur")
-        print("   - Exécuter une série de scripts d'initialisation")
 
 def main():
     print("🎬 Manga-to-Anime Studio - Lanceur Windows")
